@@ -5,7 +5,7 @@ export interface IApi {
     post<T extends object>(uri: string, data: object, method?: ApiPostMethods): Promise<T>;
 }
 
-type TPayment = 'card' | 'cash' | '';
+export type TPayment = 'card' | 'cash' | '';
 
 export interface IProduct {
     id: string;
@@ -22,3 +22,12 @@ export interface IBuyer {
     phone: string;
     address: string;
 }
+
+export type ValidationErrors = Partial<Record<keyof IBuyer, string>>;
+
+// type ValidationErrors = {
+//     payment?: string;
+//     address?: string;
+//     email?: string;
+//     phone?: string;
+// };
