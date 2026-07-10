@@ -124,7 +124,7 @@ interface IBuyer {
 
 Для хранения товаров, которые можно купить в приложении
 
-class Catalog {
+class Products {
     items: IProduct[];
     selectItem: IProduct | null;
 }
@@ -135,15 +135,15 @@ class Catalog {
 
   Методы класса:
       * получение массива товаров из модели
-      getItems(): IProduct [],
+      getProducts(): IProduct [],
       * сохранение массива товаров полученного в параметрах метода
-      setItems(items: IProduct[]): void,
+      saveProducts(products: IProduct[]): void,
       * получение одного товара по его id;
-      getItemById(id:string): IProduct | undefined,
+      getProductById(id:string): IProduct | undefined,
       * сохранение товара для подробного отображения
-      setSelectItem(item: IProduct): void
+      saveSelectProduct(product: IProduct): void
       * получение товара для подробного отображения
-      getSelectItem(): IProduct | null
+      getSelectProduct(): IProduct | null
 
 Для хранения товаров, которые пользователь выбрал для покупки
 
@@ -189,11 +189,11 @@ class Buyer() {
       * получение всех данных покупателя
       getBuyerData(): IBuyer,
       * сохранение данных об адресе в моделе
-      setBuyerAddress(address: string): void,
+      saveBuyerAddress(address: string): void,
       * сохранение данных об электронном адресе в моделе
-      setBuyerEmail(email: string): void,
+      saveBuyerEmail(email: string): void,
       * сохранение данных о телефоне в моделе
-      setBuyerPhone(phone: string): void,
+      saveBuyerPhone(phone: string): void,
       * метод который проверяет данные покупателя и возвращает результат проверки
       validateBuyer(): boolean | {},
       * очистка данных покупателя
