@@ -1,4 +1,7 @@
-/* Константа для получения полного пути для сервера. Для выполнения запроса 
+// import { API_URL, CDN_URL } from './utils/constants'
+
+
+/* Константа для получения полного пути для сервера. Для выполнения запроса
 необходимо к API_URL добавить только ендпоинт. */
 export const API_URL = `${import.meta.env.VITE_API_ORIGIN}/api/weblarek`; 
 

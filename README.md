@@ -98,3 +98,103 @@ Presenter - презентер содержит основную логику п
 `emit<T extends object>(event: string, data?: T): void` - инициализация события. При вызове события в метод передается название события и объект с данными, который будет использован как аргумент для вызова обработчика.  
 `trigger<T extends object>(event: string, context?: Partial<T>): (data: T) => void` - возвращает функцию, при вызове которой инициализируется требуемое в параметрах событие с передачей в него данных из второго параметра.
 
+#### Данные
+
+##### Интерфейсы товаров которые будут использоваться в приложении:
+
+interface IProduct {
+    id: string;
+    description: string;
+    image: string;
+    title: string;
+    category: string;
+    price: number | null;
+}
+
+Интерфейс покупателя:
+
+interface IBuyer {
+    payment: TPayment;
+    email: string;
+    phone: string;
+    address: string;
+}
+
+##### Модели данных:
+
+Для хранения товаров, которые можно купить в приложении
+
+class Catalog {
+    items: IProduct[];
+    selectItem: IProduct | null;
+}
+
+  Поля класса:
+      * хранит массив всех товаров
+      * хранит товар, выбранный для подробного отображения
+
+  Методы класса:
+      * получение массива товаров из модели
+      getItems(): IProduct [],
+      * сохранение массива товаров полученного в параметрах метода
+      setItems(items: IProduct[]): void,
+      * получение одного товара по его id;
+      getItemById(id:string): IProduct | undefined,
+      * сохранение товара для подробного отображения
+      setSelectItem(item: IProduct): void
+      * получение товара для подробного отображения
+      getSelectItem(): IProduct | null
+
+Для хранения товаров, которые пользователь выбрал для покупки
+
+class Basket{
+    items: IProduct[];
+}
+
+  Поля класса:
+      * хранит массив всех товаров выбранных покупателем
+
+  Методы класса:
+      * получение массива товаров, которые находятся в корзине
+      getBasketItems(): IProduct[]
+      * добавление товара, который был получен в параметре, в массив корзины
+      addBasketItem(item: IProduct): void
+      * удаление товара, полученного в параметре из массива корзины
+      deleteBasketItem(item: IProduct): void
+      * очистка корзины
+      clearBasket(): void
+      * получение стоимости всех товаров в корзине
+      getBasketTotal(): number
+      * получение количества товаров в корзине
+      getBasketItemsCount(): number
+      * проверка наличия товара в корзине по его id, полученного в параметр метода
+      getBasketItemById(id: string): boolean
+
+Данные покупателя, которые тот должен указать при оформлении заказа
+
+class Buyer() {
+    payment: TPayment;
+    address: string;
+    email: string;
+    phone: string;
+}
+
+  Поля класса:
+      * хранит вид оплаты
+      * почтовый адреc
+      * электронный адрес
+      * телефон
+
+  Методы класса:
+      * получение всех данных покупателя
+      getBuyerData(): IBuyer,
+      * сохранение данных об адресе в моделе
+      setBuyerAddress(address: string): void,
+      * сохранение данных об электронном адресе в моделе
+      setBuyerEmail(email: string): void,
+      * сохранение данных о телефоне в моделе
+      setBuyerPhone(phone: string): void,
+      * метод который проверяет данные покупателя и возвращает результат проверки
+      validateBuyer(): boolean | {},
+      * очистка данных покупателя
+      clearBuyer(): void,
