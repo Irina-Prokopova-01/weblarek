@@ -1,6 +1,8 @@
 import './scss/styles.scss';
 import { apiProducts} from "./utils/data.ts";
 import { Products } from "./components/Models/Products.ts";
+// import { Buyer } from "./components/Models/Buyer.ts";
+
 
 const productsModel = new Products();
 productsModel.saveProducts(apiProducts.items);
