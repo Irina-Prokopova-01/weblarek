@@ -28,6 +28,10 @@ export  class Buyer {
         this.phone = phone;
     }
 
+    saveBuyerPayment(payment: TPayment): void {
+        this.payment = payment;
+    }
+
     clearBuyer(): void {
         this.phone = "";
         this.address = "";
