@@ -148,7 +148,7 @@ class Products {
 Для хранения товаров, которые пользователь выбрал для покупки
 
 class Basket{
-    items: IProduct[];
+    products: IProduct[];
 }
 
   Поля класса:
@@ -156,19 +156,19 @@ class Basket{
 
   Методы класса:
       * получение массива товаров, которые находятся в корзине
-      getBasketItems(): IProduct[]
+      getBasketProducts(): IProduct[]
       * добавление товара, который был получен в параметре, в массив корзины
-      addBasketItem(item: IProduct): void
+      addBasketProduct(product: IProduct): void
       * удаление товара, полученного в параметре из массива корзины
-      deleteBasketItem(item: IProduct): void
+      deleteBasketProduct(product: IProduct): void
       * очистка корзины
       clearBasket(): void
       * получение стоимости всех товаров в корзине
       getBasketTotal(): number
       * получение количества товаров в корзине
-      getBasketItemsCount(): number
+      getBasketProductsCount(): number
       * проверка наличия товара в корзине по его id, полученного в параметр метода
-      getBasketItemById(id: string): boolean
+      getBasketProductById(id: string): boolean
 
 Данные покупателя, которые тот должен указать при оформлении заказа
 
