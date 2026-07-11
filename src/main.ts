@@ -3,6 +3,11 @@ import { apiProducts} from "./utils/data.ts";
 import { Products } from "./components/Models/Products.ts";
 import { Buyer } from "./components/Models/Buyer.ts";
 import { Basket } from "./components/Models/Basket.ts";
+import {Api} from "./components/base/Api.ts";
+import {API_URL} from "./utils/constants.ts";
+import { Server } from "./components/Models/Server.ts";
+
+
 
 const buyerModel = new Buyer();
 console.log(`Данные покупателя`, {buyerModel});
@@ -48,3 +53,15 @@ console.log(`Информация о покупателе после удале�
 // import { API_URL } from './utils/constants';
 //
 // const api = new Api(API_URL);
+
+const api = new Api(API_URL);
+const server = new Server(api);
+
+server.getProduct()
+    .then((products) => {
+        productsModel.saveProducts(products.items);
+        console.log(`Список товаров с сервера`, productsModel.getProducts());
+    })
+    .catch((err) => {
+        console.error(`Товары не загружены:`, err);
+    });
