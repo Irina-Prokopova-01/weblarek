@@ -31,3 +31,18 @@ export type ValidationErrors = Partial<Record<keyof IBuyer, string>>;
 //     email?: string;
 //     phone?: string;
 // };
+
+export interface IOrderResult {
+    id: string;
+    total: number;
+}
+
+export interface IProductsResponse {
+    total: number;
+    items: IProduct[];
+}
+
+export interface IOrderInfo extends IBuyer {
+    total: number;
+    items: string[];
+}
