@@ -6,7 +6,9 @@ import { Basket } from "./components/Models/Basket.ts";
 import {Api} from "./components/base/Api.ts";
 import {API_URL} from "./utils/constants.ts";
 import { Server } from "./components/Models/Server.ts";
-
+import {Header} from "./components/Views/Header.ts";
+import {ensureElement} from "./utils/utils.ts";
+import {EventEmitter} from "./components/base/Events.ts";
 
 
 const buyerModel = new Buyer();
@@ -49,10 +51,6 @@ console.log(`Валидация данных покупателя`, buyerModel. 
 buyerModel.clearBuyer()
 console.log(`Информация о покупателе после удаления`, buyerModel. getBuyerData());
 
-// import { Api } from './components/base/Api'
-// import { API_URL } from './utils/constants';
-//
-// const api = new Api(API_URL);
 
 const api = new Api(API_URL);
 const server = new Server(api);
@@ -65,3 +63,14 @@ server.getProduct()
     .catch((err) => {
         console.error(`Товары не загружены:`, err);
     });
+
+const events = new EventEmitter();
+const headerContainer = ensureElement<HTMLElement>('.header')
+const header = new Header(headerContainer, events);
+
+header.counter = 5;
+console.log('Счетчик установлен в 5');
+
+events.on('basket:open', () => {
+    console.log('✅ Событие basket:open сработало!');
+});
