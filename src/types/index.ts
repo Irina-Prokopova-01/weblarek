@@ -46,3 +46,7 @@ export interface IOrderInfo extends IBuyer {
     total: number;
     items: string[];
 }
+
+export interface IHeader {
+    counter: number;
+}
