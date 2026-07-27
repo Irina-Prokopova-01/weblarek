@@ -50,3 +50,7 @@ export interface IOrderInfo extends IBuyer {
 export interface IHeader {
     counter: number;
 }
+
+export interface IGallery {
+    catalog: HTMLElement [];
+}
