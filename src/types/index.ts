@@ -54,3 +54,11 @@ export interface IHeader {
 export interface IGallery {
     catalog: HTMLElement [];
 }
+
+export interface IModal {
+    content: HTMLElement
+}
+
+export interface ISuccess {
+    check: number
+}
