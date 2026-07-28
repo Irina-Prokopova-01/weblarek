@@ -9,7 +9,10 @@ import { Server } from "./components/Models/Server.ts";
 import {Header} from "./components/Views/Header.ts";
 import {ensureElement} from "./utils/utils.ts";
 import {EventEmitter} from "./components/base/Events.ts";
-
+import { Gallery} from "./components/Views/Gallery.ts";
+// import { Modal } from "./components/Views/Modal.ts";
+import { CardCatalog } from "./components/Views/CardCatalog.ts";
+import { cloneTemplate } from "./utils/utils";
 
 const buyerModel = new Buyer();
 console.log(`Данные покупателя`, {buyerModel});
@@ -74,3 +77,49 @@ console.log('Счетчик установлен в 5');
 events.on('basket:open', () => {
     console.log('✅ Событие basket:open сработало!');
 });
+
+const galleryContainer = ensureElement<HTMLElement>(".gallery");
+
+const gallery = new Gallery(galleryContainer);
+
+server.getProduct()
+    .then((products) => {
+        productsModel.saveProducts(products.items);
+        console.log(`Список товаров с сервера`, productsModel.getProducts());
+        const testCardElements = productsModel.getProducts().map(card => {
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.textContent = card.title;
+            return div;
+        });
+
+        // gallery.render({ catalog: testCardElements });
+        console.log(`Галерея обновлена данными с сервера`, gallery.render({ catalog: testCardElements }));
+        console.log(`Количество карточек:`, galleryContainer.children.length);
+    })
+    .catch((err) => {
+        console.error(`Товары не загружены:`, err);
+    });
+
+// const modalContainer = ensureElement<HTMLElement>("#modal-container");
+//
+// const modal = new Modal(modalContainer);
+
+const cardCatalogTemplate = ensureElement<HTMLTemplateElement>("#card-catalog");
+
+events.on("products:changed", () => {
+    const itemCards = productsModel.getProducts().map((item) => {
+        const card = new CardCatalog(cloneTemplate(cardCatalogTemplate), {
+            onClick: () => {
+                events.emit("card:select", item);
+            },
+        });
+
+        return card.render(item);
+    });
+
+    gallery.render({
+        catalog: itemCards,
+    });
+});
+
