@@ -62,3 +62,12 @@ export interface IModal {
 export interface ISuccess {
     check: number
 }
+
+export interface ICard {
+    title: string;
+    price: number | null;
+}
+
+export interface ICardActions {
+    onClick: () => void;
+}
