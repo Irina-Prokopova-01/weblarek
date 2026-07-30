@@ -1,3 +1,5 @@
+import {categoryMap} from "../utils/constants.ts";
+
 export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
 
 export interface IApi {
@@ -68,6 +70,14 @@ export interface ICard {
     price: number | null;
 }
 
+export type CategoryKey = keyof typeof categoryMap;
+
 export interface ICardActions {
     onClick: () => void;
 }
+
+export interface ICardPreviewActions {
+    onToggle: () => void;
+}
+
+export type TCardPreview = Pick<IProduct, "image" | "category" | "description">;
