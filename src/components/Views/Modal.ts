@@ -13,7 +13,7 @@ export class Modal extends Component<IModal> {
         this.closeModal = ensureElement<HTMLButtonElement>('.modal__close', this.container);
 
         this.closeModal.addEventListener("click", () => {
-            this.container.classList.remove("modal_active");;
+            this.container.classList.remove("modal_active");
         });
 
     }
@@ -21,11 +21,11 @@ export class Modal extends Component<IModal> {
         this.contentModal.replaceChildren();
         this.contentModal.append(value);
     }
-    // open() {
-    //     this.container.classList.add("modal_active");
-    // }
-    //
-    // close() {
-    //     this.container.classList.remove("modal_active");
-    // }
+    open() {
+        this.container.classList.add("modal_active");
+    }
+
+    close() {
+        this.container.classList.remove("modal_active");
+    }
 }
