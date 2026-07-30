@@ -2,10 +2,10 @@ import { IProduct } from "../../types";
 import { categoryMap, CDN_URL } from "../../utils/constants";
 import { ensureElement } from "../../utils/utils";
 import { Card } from "./Card";
-import { ICardActions } from "../../types";
+import { ICardActions, CategoryKey } from "../../types";
 
 
-export type CategoryKey = keyof typeof categoryMap;
+
 export type TCardCatalog = Pick<IProduct, "image" | "category">;
 
 export class CardCatalog extends Card<TCardCatalog> {
