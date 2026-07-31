@@ -8,7 +8,7 @@ export class Products {
     constructor(private events: IEvents) {}
     saveProducts(products: IProduct[]): void {
         this.products = [...products];
-        this.events.emit("products:changed");
+        this.events.emit("catalog:changed");
     }
 
     getProducts(): IProduct [] {
@@ -22,6 +22,7 @@ export class Products {
 
     saveSelectProduct(product: IProduct): void {
         this.selectProduct = product;
+        this.events.emit("preview:changed");
     }
 
     getSelectProduct(): IProduct | null {
