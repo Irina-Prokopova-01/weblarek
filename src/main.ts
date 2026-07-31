@@ -10,18 +10,18 @@ import {Header} from "./components/Views/Header.ts";
 import {ensureElement} from "./utils/utils.ts";
 import {EventEmitter} from "./components/base/Events.ts";
 import { Gallery} from "./components/Views/Gallery.ts";
-// import { Modal } from "./components/Views/Modal.ts";
+import { Modal } from "./components/Views/Modal.ts";
 import { CardCatalog } from "./components/Views/CardCatalog.ts";
 import { cloneTemplate } from "./utils/utils";
 // import {Card} from "./components/Views/Card.ts";
-// import { IProduct } from "./types";
-// import { CardPreview} from "./components/Views/CardPreview.ts";
+import { IProduct } from "./types";
+import { CardPreview} from "./components/Views/CardPreview.ts";
 
 // Создание экземпляров класса моделей (инициализация)
 const events = new EventEmitter();
 const buyerModel = new Buyer();
 console.log(`Данные покупателя`, {buyerModel});
-const basketModel = new Basket();
+const basketModel = new Basket(events);
 console.log(`Корзина создана`, {basketModel});
 const productsModel = new Products(events);
 
@@ -81,13 +81,13 @@ server
 const headerContainer = ensureElement<HTMLElement>('.header')
 const galleryContainer = ensureElement<HTMLElement>(".gallery");
 const cardCatalogTemplate = ensureElement<HTMLTemplateElement>("#card-catalog");
-// const CatalogPreview = ensureElement<HTMLTemplateElement>("#card-preview");
-// const modalContainer = ensureElement<HTMLElement>("#modal-container");
+const CatalogPreview = ensureElement<HTMLTemplateElement>("#card-preview");
+const modalContainer = ensureElement<HTMLElement>("#modal-container");
 
 // Создание экземпляров классов Views (инициализация)
 const header = new Header(headerContainer, events);
 const gallery = new Gallery(galleryContainer);
-// const modal = new Modal(modalContainer);
+const modal = new Modal(modalContainer);
 
 header.counter = 5;
 console.log('Счетчик установлен в 5');
@@ -96,40 +96,59 @@ events.on('basket:open', () => {
     console.log('✅ Событие basket:open сработало!');
 });
 
-
-
-
-// server.getProduct()
-//     .then((products) => {
-//         productsModel.saveProducts(products.items);
-//         console.log(`Список товаров для галлереи`, productsModel.getProducts());
-//         const testCardElements = productsModel.getProducts().map(card => {
-//             const div = document.createElement('div');
-//             div.className = 'card';
-//             div.textContent = card.title;
-//             return div;
-//         });
-//
-//         // gallery.render({ catalog: testCardElements });
-//         console.log(`Галерея обновлена данными с сервера`, gallery.render({ catalog: testCardElements }));
-//         console.log(`Количество карточек:`, galleryContainer.children.length);
-//     })
-//     .catch((err) => {
-//         console.error(`Товары не загружены:`, err);
-//     });
-
 console.log(cardCatalogTemplate);
-events.on("products:changed", () => {
+
+// Обновление галереи товаров при изменении каталога. Обработка клика по товарной карточке.
+events.on("catalog:changed", () => {
     const itemCards = productsModel.getProducts().map((item) => {
         const card = new CardCatalog(cloneTemplate(cardCatalogTemplate), {
             onClick: () => {
-                events.emit("products:changed", item);
+                events.emit("card:select", item);
             },
         });
         return card.render(item);
     });
-    console.log(cardCatalogTemplate);
     gallery.render({
         catalog: itemCards,
     });
+});
+
+events.on<IProduct>("card:select", (item) => {
+    console.log('Событие получено:', item);
+    productsModel.saveSelectProduct(item);
+});
+
+const preview = new CardPreview(cloneTemplate(CatalogPreview), {
+    onToggle: () => {
+        const product = productsModel.getSelectProduct();
+
+        if (product) {
+            events.emit("basket:toggle", product);
+            modal.close();
+        }
+    },
+});
+
+// Обновление модального окна с деталями товара.
+events.on("preview:changed", () => {
+    const item = productsModel.getSelectProduct();
+
+    if (!item) {
+        console.log("Товар не выбран для предпросмотра");
+        return;
+    }
+
+    if (item.price === null) {
+        preview.buttonText = "Недоступно";
+        preview.buttonDisabled = true;
+    } else if (basketModel.getBasketProductById(item.id)) {
+        preview.buttonText = "Удалить из корзины";
+        preview.buttonDisabled = false;
+    } else {
+        preview.buttonText = "Купить";
+        preview.buttonDisabled = false;
+    }
+
+    modal.content = preview.render(item);
+    modal.open();
 });
