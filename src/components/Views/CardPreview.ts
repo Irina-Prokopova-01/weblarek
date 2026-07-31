@@ -14,10 +14,10 @@ export class CardPreview extends Card<TCardPreview> {
     constructor(container: HTMLElement, action?:ICardPreviewActions ) {
         super(container);
 
-        this.imageElement = ensureElement<HTMLImageElement>( "card__image", this.container);
-        this.categoryElement = ensureElement<HTMLElement>( "card__category", this.container);
-        this.descriptionElement = ensureElement<HTMLElement>('card__text', this.container);
-        this.buttonElement = ensureElement<HTMLButtonElement>( "button card__button", this.container);
+        this.imageElement = ensureElement<HTMLImageElement>( ".card__image", this.container);
+        this.categoryElement = ensureElement<HTMLElement>( ".card__category", this.container);
+        this.descriptionElement = ensureElement<HTMLElement>('.card__text', this.container);
+        this.buttonElement = ensureElement<HTMLButtonElement>( ".card__button", this.container);
 
         if (action?.onToggle) {
             this.buttonElement.addEventListener("click", action.onToggle);
@@ -35,7 +35,14 @@ export class CardPreview extends Card<TCardPreview> {
         }
     }
 
-    set img (value: string) {
+    set image (value: string) {
         this.setImage(this.imageElement, CDN_URL + value, this.title);
+    }
+    set buttonText(value: string) {
+        this.buttonElement.textContent = value;
+    }
+
+    set buttonDisabled(value: boolean) {
+        this.buttonElement.disabled = value;
     }
 }
