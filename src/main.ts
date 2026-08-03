@@ -198,3 +198,6 @@ events.on("basket:changed", () => {
     header.counter = basketCardItems.length;
 })
 
+events.on<IProduct>("basket:remove", (product) => {
+    basketModel.deleteBasketProduct(product);
+});
