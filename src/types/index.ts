@@ -96,7 +96,11 @@ export interface IBasket {
     buttonDisabled: boolean;
 }
 
+export interface IBaseForm {
+    valid: boolean;
+    error: string;
+}
 
-export interface IBasketActions {
-    onOrder: () => void;
+export interface IBaseFormActions {
+    onSubmit: () => void;
 }
