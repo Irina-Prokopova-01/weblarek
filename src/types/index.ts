@@ -81,3 +81,22 @@ export interface ICardPreviewActions {
 }
 
 export type TCardPreview = Pick<IProduct, "image" | "category" | "description">;
+
+export type TCardBasket = Pick<IProduct, "id"> & {
+    index: number;
+};
+
+export interface ICardBasketActions {
+    onDelete: () => void;
+}
+
+export interface IBasket {
+    items: HTMLElement[];
+    price: string;
+    buttonDisabled: boolean;
+}
+
+
+export interface IBasketActions {
+    onOrder: () => void;
+}
