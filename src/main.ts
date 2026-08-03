@@ -16,6 +16,8 @@ import { cloneTemplate } from "./utils/utils";
 // import {Card} from "./components/Views/Card.ts";
 import { IProduct } from "./types";
 import { CardPreview} from "./components/Views/CardPreview.ts";
+import { BasketViews } from "./components/Views/Basket";
+import {CardBasket} from "./components/Views/CardBasket.ts";
 
 // Создание экземпляров класса моделей (инициализация)
 const events = new EventEmitter();
@@ -81,22 +83,27 @@ server
 const headerContainer = ensureElement<HTMLElement>('.header')
 const galleryContainer = ensureElement<HTMLElement>(".gallery");
 const cardCatalogTemplate = ensureElement<HTMLTemplateElement>("#card-catalog");
-const CatalogPreview = ensureElement<HTMLTemplateElement>("#card-preview");
+const CatalogPreviewTemplate = ensureElement<HTMLTemplateElement>("#card-preview");
 const modalContainer = ensureElement<HTMLElement>("#modal-container");
+const basketViewsTemplate = ensureElement<HTMLTemplateElement>("#basket");
+const basketCardTemplate = ensureElement<HTMLTemplateElement>("#card-basket");
 
 // Создание экземпляров классов Views (инициализация)
 const header = new Header(headerContainer, events);
 const gallery = new Gallery(galleryContainer);
 const modal = new Modal(modalContainer);
-
-header.counter = 5;
-console.log('Счетчик установлен в 5');
-
-events.on('basket:open', () => {
-    console.log('✅ Событие basket:open сработало!');
+const basket = new BasketViews(cloneTemplate(basketViewsTemplate), {
+    onOrder: () => events.emit("order:open"),
 });
 
-console.log(cardCatalogTemplate);
+// header.counter = 5;
+// console.log('Счетчик установлен в 5');
+//
+// events.on('basket:open', () => {
+//     console.log('✅ Событие basket:open сработало!');
+// });
+//
+// console.log(cardCatalogTemplate);
 
 // Обновление галереи товаров при изменении каталога. Обработка клика по товарной карточке.
 events.on("catalog:changed", () => {
@@ -118,7 +125,7 @@ events.on<IProduct>("card:select", (item) => {
     productsModel.saveSelectProduct(item);
 });
 
-const preview = new CardPreview(cloneTemplate(CatalogPreview), {
+const preview = new CardPreview(cloneTemplate(CatalogPreviewTemplate), {
     onToggle: () => {
         const product = productsModel.getSelectProduct();
 
@@ -151,4 +158,13 @@ events.on("preview:changed", () => {
 
     modal.content = preview.render(item);
     modal.open();
+});
+
+// Переключение состояния товара в корзине.
+events.on<IProduct>("basket:toggle", (item) => {
+    if (basketModel.getBasketProductById(item.id)) {
+        basketModel.deleteBasketProduct(item);
+    } else {
+        basketModel.addBasketProduct(item);
+    }
 });
