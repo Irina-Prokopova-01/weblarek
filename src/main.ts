@@ -168,3 +168,33 @@ events.on<IProduct>("basket:toggle", (item) => {
         basketModel.addBasketProduct(item);
     }
 });
+
+// Открытие корзины.
+events.on("basket:open", () => {
+    modal.content = basket.render();
+    modal.open();
+});
+
+// Начальная инициализация корзины.
+basket.buttonDisabled = true;
+basket.price = '0';
+
+// Обновление корзины при изменении.
+events.on("basket:changed", () => {
+    basket.buttonDisabled = basketModel.getBasketProducts().length === 0;
+    basket.price = String(basketModel.getBasketTotal());
+    //Создание карточек товаров
+    const basketCardItems = basketModel.getBasketProducts().map((item, index) => {
+        const basketCard = new CardBasket(cloneTemplate(basketCardTemplate), {
+            onDelete: () => events.emit("order:open"),
+        });
+        return basketCard.render({
+            ...item,
+            index: index + 1
+        });
+    });
+    // Обновление UI
+    basket.items = basketCardItems;
+    header.counter = basketCardItems.length;
+})
+
