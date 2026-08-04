@@ -104,3 +104,14 @@ export interface IBaseForm {
 export interface IBaseFormActions {
     onSubmit: () => void;
 }
+
+export interface IContactFormActions {
+    submit: () => void;
+    onEmail: (value: string) => void;
+    onPhone: (value: string) => void;
+}
+
+export interface IContactForm {
+    email: string;
+    phone: string;
+}
