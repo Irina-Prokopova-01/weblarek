@@ -58,11 +58,11 @@ export interface IGallery {
 }
 
 export interface IModal {
-    content: HTMLElement
+    content: HTMLElement;
 }
 
 export interface ISuccess {
-    check: number
+    description: number;
 }
 
 export interface ICard {
@@ -96,6 +96,10 @@ export interface IBasket {
     buttonDisabled: boolean;
 }
 
+export interface IBasketActions {
+    onOrder: () => void;
+}
+
 export interface IBaseForm {
     valid: boolean;
     error: string;
@@ -106,12 +110,18 @@ export interface IBaseFormActions {
 }
 
 export interface IContactFormActions {
-    submit: () => void;
+    onSubmit: () => void;
     onEmail: (value: string) => void;
     onPhone: (value: string) => void;
 }
+//
+// export interface IContactForm {
+//     email: string;
+//     phone: string;
+// }
 
-export interface IContactForm {
-    email: string;
-    phone: string;
+export interface IOrderFormActions {
+    onPayment: (value: string) => void;
+    onAddress: (value: string) => void;
+    onSubmit: () => void;
 }
