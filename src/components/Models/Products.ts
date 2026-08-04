@@ -28,4 +28,19 @@ export class Products {
     getSelectProduct(): IProduct | null {
         return this.selectProduct;
     }
+
+    addProduct(product: IProduct): void {
+        this.products.push(product);
+        this.events.emit("basket:changed");
+    }
+
+    deleteProduct(product: IProduct): void {
+        this.products = this.products.filter((item) => item.id !== product.id);
+        this.events.emit("basket:changed");
+    }
+
+    clearProduct(): void {
+        this.products = [];
+        this.events.emit("basket:changed");
+    }
 }
