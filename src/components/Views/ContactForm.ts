@@ -8,7 +8,7 @@ export class ContactForm extends BaseForm {
     protected phoneInputContactForm: HTMLInputElement;
 
     constructor(container: HTMLElement, actions?: IContactFormActions) {
-        super(container);
+        super(container, actions);
         this.emailInputContactForm = ensureElement<HTMLInputElement>('[name="email"]', this.container);
         this.phoneInputContactForm = ensureElement<HTMLInputElement>('[name="phone"]', this.container);
 
