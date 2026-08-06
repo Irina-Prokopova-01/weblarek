@@ -1,11 +1,34 @@
 import {IBuyer, ValidationErrors} from "../../types"
 import { TPayment } from "../../types"
+import { IEvents } from "../base/Events";
 
 export  class Buyer {
-    private payment: TPayment = "";
+    private payment: TPayment | "" = "";
     private address: string = "";
     private email: string = "";
     private phone: string = "";
+
+    constructor(private events: IEvents) {}
+
+    saveBuyerAddress(address: string): void {
+        this.address = address;
+        this.events.emit("buyer:changed");
+    }
+
+    saveBuyerEmail(email: string): void {
+        this.email = email;
+        this.events.emit("buyer:changed");
+    }
+
+    saveBuyerPhone(phone: string): void {
+        this.phone = phone;
+        this.events.emit("buyer:changed");
+    }
+
+    saveBuyerPayment(payment: TPayment): void {
+        this.payment = payment;
+        this.events.emit("buyer:changed");
+    }
 
     getBuyerData(): IBuyer {
         return {
@@ -16,46 +39,35 @@ export  class Buyer {
         }
     }
 
-    saveBuyerAddress(address: string): void {
-        this.address = address;
-    }
-
-    saveBuyerEmail(email: string): void {
-        this.email = email;
-    }
-
-    saveBuyerPhone(phone: string): void {
-        this.phone = phone;
-    }
-
-    saveBuyerPayment(payment: TPayment): void {
-        this.payment = payment;
-    }
-
     clearBuyer(): void {
         this.phone = "";
         this.address = "";
         this.email = "";
         this.payment = "";
+
+        this.events.emit("buyer:changed");
     }
+
 
     validateBuyer(): ValidationErrors {
         const errors: ValidationErrors = {};
 
-        if (!this.phone || this.phone.trim() === "") {
-            errors.phone = "Укажите номер телефона";
-        }
-        if (!this.email || this.email.trim() === "") {
-            errors.email = "Укажите электронный адрес";
-        }
-        if (!this.address || this.address.trim() === "") {
-            errors.address = "Укажите почтовый адрес"
-        }
-        if (!this.payment || this.payment.trim() === "") {
-            errors.payment = "Не выбран вид оплаты"
+        if (!this.payment) {
+            errors.payment = "Выберите способ оплаты";
         }
 
-        return  errors ;
+        if (!this.email) {
+            errors.email = "Укажите email";
+        }
+
+        if (!this.phone) {
+            errors.phone = "Укажите телефон";
+        }
+
+        if (!this.address) {
+            errors.address = "Укажите адрес";
+        }
+
+        return errors;
     }
-
 }

@@ -10,11 +10,6 @@ export  class Basket{
         return [...this.products];
     }
 
-    // addBasketProduct(product: IProduct): void {
-    //     this.products.push(product);
-    //     this.events.emit("basket:changed");
-    // }
-
     addBasketProduct(product: IProduct): void {
         // Проверка на существование продукта и его id
         if (!product || !product.id) {
@@ -32,11 +27,6 @@ export  class Basket{
         this.events.emit("basket:changed");
     }
 
-    // deleteBasketProduct(product: IProduct): void {
-    //     this.products = this.products.filter((item) => item.id !== product.id);
-    //     this.events.emit("basket:changed");
-    // }
-
     deleteBasketProduct(product: IProduct): void {
         // Проверка на существование продукта и его id
         if (!product || !product.id) {
@@ -48,7 +38,7 @@ export  class Basket{
         this.products = this.products.filter((item) => {
             // Проверяем, что item существует и имеет id
             if (!item || !item.id) {
-                console.warn('Найден некорректный продукт в корзине, он будет удален', item);
+                console.warn('Найден некорректный продукт в корзине', item);
                 return false; // Удаляем некорректный продукт из корзины
             }
             // Сравниваем id
