@@ -20,11 +20,12 @@ import { BasketViews } from "./components/Views/Basket";
 import {CardBasket} from "./components/Views/CardBasket.ts";
 import { OrderSuccess } from "./components/Views/OrderSuccess";
 import { ContactForm } from "./components/Views/ContactForm.ts";
-// import { OrderForm} from "./components/Views/OrderForm.ts";
+import { OrderForm} from "./components/Views/OrderForm.ts";
+import { TPayment } from "./types";
 
 // Создание экземпляров класса моделей (инициализация)
 const events = new EventEmitter();
-const buyerModel = new Buyer();
+const buyerModel = new Buyer(events);
 console.log(`Данные покупателя`, {buyerModel});
 const basketModel = new Basket(events);
 console.log(`Корзина создана`, {basketModel});
@@ -56,16 +57,17 @@ const basketViewsTemplate = ensureElement<HTMLTemplateElement>("#basket");
 const basketCardTemplate = ensureElement<HTMLTemplateElement>("#card-basket");
 const contactsFormTemplate = ensureElement<HTMLTemplateElement>("#contacts");
 const OrderSuccessTemplate = ensureElement<HTMLTemplateElement>("#success");
-// const OrderFormTemplate = ensureElement<HTMLTemplateElement>("#order");
+const OrderFormTemplate = ensureElement<HTMLTemplateElement>("#order");
 
 // Создание экземпляров классов Views (инициализация)
 const header = new Header(headerContainer, events);
 const gallery = new Gallery(galleryContainer);
 const modal = new Modal(modalContainer);
-// const order = new OrderForm(OrderFormTemplate)
+
 const basket = new BasketViews(cloneTemplate(basketViewsTemplate), {
-    onOrder: () => events.emit("order:open"),
-});
+    onOrder: () => {console.log('Order clicked!');
+        events.emit("order:open")
+}});
 
 // Обновление галереи товаров при изменении каталога. Обработка клика по товарной карточке.
 events.on("catalog:changed", () => {
@@ -142,7 +144,7 @@ events.on("basket:changed", () => {
     //Создание карточек товаров
     const basketCardItems = basketModel.getBasketProducts().map((item, index) => {
         const basketCard = new CardBasket(cloneTemplate(basketCardTemplate), {
-            onDelete: () => events.emit("order:open"),
+            onDelete: () => events.emit("basket:remove", item),
         });
         return basketCard.render({
             ...item,
@@ -164,33 +166,40 @@ events.on("basket:open", () => {
     modal.open();
 });
 
+const order = new OrderForm(cloneTemplate(OrderFormTemplate), {
+    onPayment(payment) {
+        buyerModel.saveBuyerPayment(payment);
+    },
+    onAddress(address) {
+        buyerModel.saveBuyerAddress(address);
+    },
+    onSubmit() {
+        events.emit("contacts:open");
+    },
+});
+
+// Обработчик события order:open:
+events.on("order:open", () => {
+    console.log('Событие order:open получено!');
+    modal.content = order.render();
+    modal.open();
+});
 
 // Функция показа успешного заказа
 function viewOrderSuccess(data: { total: number }) {
-    // Создаем экземпляр OrderSuccess с передачей событий
-    const success = new OrderSuccess(
-        cloneTemplate(OrderSuccessTemplate),
-        events
-    );
-
-    // Устанавливаем описание через сеттер
-    success.description = `Списано ${data.total} синапсов`;
-
-    // Добавляем обработчик закрытия через события
-    events.on('success-modal:close', () => {
-        productsModel.clearProduct();
-        buyerModel.clearBuyer();
-        modal.close();
-        // Удаляем обработчик после выполнения, чтобы избежать дублирования
-        events.off('success-modal:close', () => {
-
-        });
+    const success = new OrderSuccess(cloneTemplate(OrderSuccessTemplate), {
+        onClose() {
+            basketModel.clearBasket();
+            buyerModel.clearBuyer();
+            modal.close();
+        },
     });
+
+    success.description = `Списано ${data.total} синапсов`;
 
     modal.content = success.render();
     modal.open();
 }
-
 
 // Инициализация формы и сбор данных покупателя.
 const contacts = new ContactForm(cloneTemplate(contactsFormTemplate), {
@@ -228,4 +237,32 @@ events.on("contacts:open", () => {
     modal.open();
 });
 
+
+// Валидируем данные и обновляем форму.
+events.on("buyer:changed", () => {
+    const buyerData = buyerModel.getBuyerData();
+    const errors = buyerModel.validateBuyer();
+
+    order.payment = buyerData.payment as TPayment | "";
+    order.address = buyerData.address;
+
+    contacts.email = buyerData.email;
+    contacts.phone = buyerData.phone;
+
+    if (errors.payment || errors.address) {
+        order.valid = false;
+        order.error = errors.payment || errors.address || "";
+    } else {
+        order.valid = true;
+        order.error = "";
+    }
+
+    if (errors.email || errors.phone) {
+        contacts.valid = false;
+        contacts.error = errors.email || errors.phone || "";
+    } else {
+        contacts.valid = true;
+        contacts.error = "";
+    }
+});
 
