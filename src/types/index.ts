@@ -7,7 +7,7 @@ export interface IApi {
     post<T extends object>(uri: string, data: object, method?: ApiPostMethods): Promise<T>;
 }
 
-export type TPayment = 'card' | 'cash' | '';
+export type TPayment = 'card' | 'cash';
 
 export interface IProduct {
     id: string;
@@ -19,20 +19,13 @@ export interface IProduct {
 }
 
 export interface IBuyer {
-    payment: TPayment;
+    payment: TPayment | "";
     email: string;
     phone: string;
     address: string;
 }
 
 export type ValidationErrors = Partial<Record<keyof IBuyer, string>>;
-
-// type ValidationErrors = {
-//     payment?: string;
-//     address?: string;
-//     email?: string;
-//     phone?: string;
-// };
 
 export interface IOrderResult {
     id: string;
@@ -62,7 +55,11 @@ export interface IModal {
 }
 
 export interface ISuccess {
-    description: number;
+    description: string;
+}
+
+export interface ISuccessActions {
+    onClose: () => void;
 }
 
 export interface ICard {
@@ -114,11 +111,6 @@ export interface IContactFormActions {
     onEmail: (value: string) => void;
     onPhone: (value: string) => void;
 }
-//
-// export interface IContactForm {
-//     email: string;
-//     phone: string;
-// }
 
 export interface IOrderFormActions {
     onPayment: (value: string) => void;
