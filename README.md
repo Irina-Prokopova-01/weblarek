@@ -214,3 +214,220 @@ Kласс, который представляет коммуникационн�
       * post запрос на эндпоинт /order/ и передаёт в него данные, полученные в 
         параметрах метода, а возвращает объект, подтверждающий покупку на определенную сумму
         post<T extends object>(uri: string, data: object, method: ApiPostMethods = 'POST')
+
+
+#### Слой View
+
+Базовый класс для форм, содержит общий функционал.
+
+class BaseForm () {
+    submitFormButton: HTMLButtonElement;
+    errorFormElement: HTMLElement;
+}
+
+    Поля класса:
+        * хранит кнопку формы
+        * текст ошибки
+
+    Методы класса:
+        * информация об ошибке
+        set error (value: string),
+        * переключатель отправки формы
+        set valid(value: boolean)
+
+Класс для отображения спика товаров, стоимости в корзине и кнопку оформления заказа.
+
+class BasketViews () {
+    basketButtonOrder: HTMLButtonElement;
+    basketPrice: HTMLElement;
+    basketList: HTMLElement;
+}
+
+    Поля класса:
+        * хранит кнопку "Оформить" заказ
+        * инфо о сумме заказа в карзине
+        * список товаров в корзине
+
+    Методы класса:
+        * деактивирует кнопку
+        set buttonDisabled(value: boolean),
+        * инфо о стоимости товаров
+        set price(value: string)
+        * отрисовка списка товаров в корзине
+        set items(values: HTMLElement[])
+
+Базовый класс с общим для всех карточек функционалом.
+
+class Card () {
+    cardTitleElement: HTMLElement;
+    cardPriceElement: HTMLElement;
+}
+
+    Поля класса:
+        * хранит наименование товара
+        * цена товара
+
+    Методы класса:
+        * устанавливает наименование товара
+        set title(value: string),
+        * устанавливает цену товара
+        set price(value: number | null) 
+
+Класс для отрисовки товара внутри корзины.
+
+class CardBasket () {
+    cardBasketDelete: HTMLButtonElement;
+    cardBasketIndex: HTMLElement;
+}
+
+    Поля класса:
+        * хранит номер товара в корзине
+        * хранит кнопку удаления товара из корзины
+
+    Методы класса:
+        * отвечает за изменение номера товара в корзине
+        set index(value: string)
+
+Класс для отрисовки КАРТОЧКИ ТОВАРА в каталоге (котегория, фото).
+
+class CardCatalog () {
+    imageElement: HTMLImageElement;
+    categoryElement: HTMLElement;
+}
+
+    Поля класса:
+        * хранит категорию товара
+        * хранит изображение товара
+
+    Методы класса:
+        * отвечает за изменение категории товара
+        set category(value: string)
+        * отвечает за изменение изображения товара
+        set image(value: string)
+
+
+Класс для отрисовки подробной инфо. о товаре (категория, фото).
+
+class CardCatalog () {
+    imageElement: HTMLImageElement;
+    categoryElement: HTMLElement;
+    descriptionElement: HTMLElement;
+    buttonElement: HTMLButtonElement;
+}
+
+    Поля класса:
+        * хранит категорию товара
+        * хранит изображение товара
+        * хранит описание товара
+        * хранит кнопку товара
+
+    Методы класса:
+        * отвечает за изменение категории товара
+        set category(value: string)
+        * отвечает за изменение изображения товара
+        set image (value: string)
+        * отвечает за изменение кнопки карточки товара
+        set buttonText(value: string) 
+        * отвечает за изменение состояние кнопки действия товара
+        set buttonDisabled(value: boolean) 
+
+Класс содержит контактные данные покупателя (телефон, адрес).
+
+class ContactForm () {
+    emailInputContactForm: HTMLInputElement;
+    phoneInputContactForm: HTMLInputElement;
+}
+
+    Поля класса:
+        * хранит адрес эл. почты
+        * хранит номер телефона
+
+    Методы класса:
+        * отвечает за поле ввода email
+         set email (value: string) 
+        * отвечает за поле ввода номер телефона
+        set phone (value: string) 
+
+Класс для отрисовки списка карточек товаров.
+
+class Gallery () {
+    catalogElement: HTMLElement;
+}
+
+    Поля класса:
+        * хранит каталог (карточки товаров)
+  
+
+    Методы класса:
+        * отвечает за отображение списка карточек товаров
+         set catalog(items: HTMLElement[])
+
+
+Класс отрисовки корзины (кнопка открытия корзины и колличество товаров в ней)
+
+class Header() {
+    counterElement: HTMLElement;
+    basketButton: HTMLButtonElement;
+}
+
+    Поля класса:
+        * хранит кнопку открытия корзины
+        * хранит 
+
+    Методы класса:
+        * отвечает за устанавливку количества товаров в корзине и обновляет отображение счетчика
+         set counter(value: number)  
+
+Класс отвечает за отображение модального окна и его содержимого. 
+Управляет открытием, закрытием и отображением содержимого модального окна.
+
+class Modal () {
+    contentModal: HTMLElement;
+    closeModal: HTMLElement;
+}
+
+    Поля класса:
+        * хранит кнопку закрытия модального окна
+        * хранит контейнер для отображения содержимого модального окна
+
+    Методы класса:
+        * отвечает за устанавку содержимого модального окна
+         set content(value: HTMLElement)
+
+
+Класс отрисовывает форму выбора способа оплаты и ввода адреса доставки.
+
+class OrderForm  () {
+    cardOrderButton: HTMLButtonElement;
+    cashOrderButton: HTMLButtonElement;
+    addressOrderInput: HTMLInputElement;
+}
+
+    Поля класса:
+        * хранит кнопку выбора оплаты банковской картой
+        * хранит кнопку выбора оплаты при получении
+
+    Методы класса:
+        * отвечает за устанавку выбранного способ оплаты.
+         set payment(value: TPayment | "") 
+        * отвечает за устанавливку адрес доставки
+        set address(value: string)
+
+Класс отвечает за отрисовку окна подтверждения успешного заказа.
+
+class OrderSuccess () {
+    successOrderCheck: HTMLElement;
+    successOrderButton: HTMLButtonElement;
+}
+
+    Поля класса:
+        * хранит кнопку перенаправляющую в каталог товаров
+        * хранит элемент с текстом и суммой заказа
+
+    Методы класса:
+        * отвечает за устанавку суммы заказа
+         set description(value: string) 
+
+
+
+
