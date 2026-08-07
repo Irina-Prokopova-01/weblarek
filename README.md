@@ -235,6 +235,8 @@ class BaseForm () {
         * переключатель отправки формы
         set valid(value: boolean)
 
+    constructor(container: HTMLElement) - Передает контейнер (HTML-элемент) блока order в родительский класс Component
+
 Класс для отображения спика товаров, стоимости в корзине и кнопку оформления заказа.
 
 class BasketViews () {
@@ -256,6 +258,8 @@ class BasketViews () {
         * отрисовка списка товаров в корзине
         set items(values: HTMLElement[])
 
+    constructor(container: HTMLElement) - Передает контейнер (HTML-элемент) блока basket в родительский класс Component
+
 Базовый класс с общим для всех карточек функционалом.
 
 class Card () {
@@ -273,6 +277,9 @@ class Card () {
         * устанавливает цену товара
         set price(value: number | null) 
 
+    constructor(container: HTMLElement) - Передает контейнер (HTML-элемент) блока card в родительский класс Component
+
+
 Класс для отрисовки товара внутри корзины.
 
 class CardBasket () {
@@ -287,6 +294,8 @@ class CardBasket () {
     Методы класса:
         * отвечает за изменение номера товара в корзине
         set index(value: string)
+
+    constructor(container: HTMLElement, actions?: ICardBasketActions) - Привязывает событие удаления к переданному колбэку и передает контейнер (HTML-элемент) блока card в родительский класс Component
 
 Класс для отрисовки КАРТОЧКИ ТОВАРА в каталоге (котегория, фото).
 
@@ -305,10 +314,12 @@ class CardCatalog () {
         * отвечает за изменение изображения товара
         set image(value: string)
 
+    constructor(container: HTMLElement, actions?: ICardActions) - Привязывает клик для открытия карточки и передает контейнер (HTML-элемент) блока card в родительский класс Component
+
 
 Класс для отрисовки подробной инфо. о товаре (категория, фото).
 
-class CardCatalog () {
+class class CardPreview () {
     imageElement: HTMLImageElement;
     categoryElement: HTMLElement;
     descriptionElement: HTMLElement;
@@ -330,6 +341,8 @@ class CardCatalog () {
         set buttonText(value: string) 
         * отвечает за изменение состояние кнопки действия товара
         set buttonDisabled(value: boolean) 
+
+    constructor(container: HTMLElement, action?:ICardPreviewActions ) - Проверяет, передан ли обработчик onToggle в объекте action и принимает корневой HTML-элемент блока card
 
 Класс содержит контактные данные покупателя (телефон, адрес).
 
