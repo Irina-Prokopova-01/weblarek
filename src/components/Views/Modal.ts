@@ -13,7 +13,7 @@ export class Modal extends Component<IModal> {
         this.closeModal = ensureElement<HTMLButtonElement>('.modal__close', this.container);
 
         this.closeModal.addEventListener("click", () => {
-            this.container.classList.remove("modal_active");
+            this.close();
         });
 
     }

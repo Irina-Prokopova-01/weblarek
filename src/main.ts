@@ -63,6 +63,11 @@ const OrderFormTemplate = ensureElement<HTMLTemplateElement>("#order");
 const header = new Header(headerContainer, events);
 const gallery = new Gallery(galleryContainer);
 const modal = new Modal(modalContainer);
+const orderSuccess = new OrderSuccess(cloneTemplate(OrderSuccessTemplate), {
+    onClose: () => {
+        modal.close();
+    },
+});
 
 const basket = new BasketViews(cloneTemplate(basketViewsTemplate), {
     onOrder: () => {console.log('Order clicked!');
@@ -160,22 +165,32 @@ events.on<IProduct>("basket:remove", (product) => {
     basketModel.deleteBasketProduct(product);
 });
 
-// Открытие корзины.
+/// Открытие корзины.
 events.on("basket:open", () => {
     modal.content = basket.render();
     modal.open();
 });
 
 const order = new OrderForm(cloneTemplate(OrderFormTemplate), {
-    onPayment(payment) {
-        buyerModel.saveBuyerPayment(payment);
+    onPayment: (payment) => {
+        // эмитим событие, а не напрямую вызываем метод модели
+        events.emit("buyer:payment", payment);
     },
-    onAddress(address) {
-        buyerModel.saveBuyerAddress(address);
+    onAddress: (address) => {
+        events.emit("buyer:address", address);
     },
-    onSubmit() {
+    onSubmit: () => {
         events.emit("contacts:open");
     },
+});
+
+// Обработчики для сохранения данных покупателя
+events.on("buyer:payment", (payment) => {
+    buyerModel.saveBuyerPayment(payment);
+});
+
+events.on("buyer:address", (address) => {
+    buyerModel.saveBuyerAddress(address);
 });
 
 // Обработчик события order:open:
@@ -187,17 +202,11 @@ events.on("order:open", () => {
 
 // Функция показа успешного заказа
 function viewOrderSuccess(data: { total: number }) {
-    const success = new OrderSuccess(cloneTemplate(OrderSuccessTemplate), {
-        onClose() {
-            basketModel.clearBasket();
-            buyerModel.clearBuyer();
-            modal.close();
-        },
-    });
-
-    success.description = `Списано ${data.total} синапсов`;
-
-    modal.content = success.render();
+    orderSuccess.description = `Списано ${data.total} синапсов`;
+    // Очищаем модели перед показом успешного заказа
+    basketModel.clearBasket();
+    buyerModel.clearBuyer();
+    modal.content = orderSuccess.render();
     modal.open();
 }
 
@@ -249,20 +258,14 @@ events.on("buyer:changed", () => {
     contacts.email = buyerData.email;
     contacts.phone = buyerData.phone;
 
-    if (errors.payment || errors.address) {
-        order.valid = false;
-        order.error = errors.payment || errors.address || "";
-    } else {
-        order.valid = true;
-        order.error = "";
-    }
+    // Улучшенная валидация для order
+    const orderErrors = [errors.address, errors.payment].filter(Boolean).join('; ');
+    order.valid = orderErrors.length === 0;
+    order.error = orderErrors;
 
-    if (errors.email || errors.phone) {
-        contacts.valid = false;
-        contacts.error = errors.email || errors.phone || "";
-    } else {
-        contacts.valid = true;
-        contacts.error = "";
-    }
+    // Улучшенная валидация для contacts
+    const contactErrors = [errors.email, errors.phone].filter(Boolean).join('; ');
+    contacts.valid = contactErrors.length === 0;
+    contacts.error = contactErrors;
 });
 

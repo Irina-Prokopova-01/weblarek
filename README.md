@@ -361,6 +361,8 @@ class ContactForm () {
         * отвечает за поле ввода номер телефона
         set phone (value: string) 
 
+    constructor(container: HTMLElement, actions?: IContactFormActions) - Привязывает клик для открытия карточки и передает контейнер (HTML-элемент) блока order в родительский класс Component
+
 Класс для отрисовки списка карточек товаров.
 
 class Gallery () {
@@ -374,6 +376,8 @@ class Gallery () {
     Методы класса:
         * отвечает за отображение списка карточек товаров
          set catalog(items: HTMLElement[])
+
+    constructor(container: HTMLElement) - Передает контейнер (HTML-элемент) блока gallery в родительский класс Component
 
 
 Класс отрисовки корзины (кнопка открытия корзины и колличество товаров в ней)
@@ -391,6 +395,8 @@ class Header() {
         * отвечает за устанавливку количества товаров в корзине и обновляет отображение счетчика
          set counter(value: number)  
 
+    constructor(container: HTMLElement, protected events: IEvents) - Привязывает клик для открытия корзины и передает контейнер (HTML-элемент) блока header в родительский класс Component
+
 Класс отвечает за отображение модального окна и его содержимого. 
 Управляет открытием, закрытием и отображением содержимого модального окна.
 
@@ -406,6 +412,8 @@ class Modal () {
     Методы класса:
         * отвечает за устанавку содержимого модального окна
          set content(value: HTMLElement)
+
+    constructor(container: HTMLElement) - Хранит контейнер для отображения содержимого модального окна.
 
 
 Класс отрисовывает форму выбора способа оплаты и ввода адреса доставки.
@@ -426,6 +434,8 @@ class OrderForm  () {
         * отвечает за устанавливку адрес доставки
         set address(value: string)
 
+    constructor(container: HTMLElement, actions?: IOrderFormActions)  - Принимает корневой HTML-элемент блока order и привязывает ввод
+
 Класс отвечает за отрисовку окна подтверждения успешного заказа.
 
 class OrderSuccess () {
@@ -441,6 +451,23 @@ class OrderSuccess () {
         * отвечает за устанавку суммы заказа
          set description(value: string) 
 
+    constructor(container: HTMLElement, actions?: ISuccessActions) - Принимает корневой HTML-элемент блока success и привязывает клик onClose
 
 
+#### Список событий:
 
+- изменение данных:
+ * catalog: changed;
+ * basket: changed;
+ * buyer: changed;
+
+- взаимодействие пользователя с интерфуйсом:
+ * card: select;
+ * basket: toggle;
+ * basket: remove;
+ * basket: open;
+ * order: open;
+ * contacts: open;
+
+- события отрисовки:
+ * preview: changed;
